@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso al Sitio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            /* Sugerencia: Puedes poner un fondo oscuro aquí si quieres que el texto blanco resalte */
+            /* background-color: #333; */
+           background-image: url(fondo.JPG);
+           background-position: center;
+           background-repeat: no-repeat;
+           background-size: cover;
+            }
+        .login-container {
+            background-color: rgba(255, 255, 255, 0); /* Fondo completamente transparente */
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: none; /* Sin sombra */
+            text-align: center;
+            border: none; /* Sin borde */
+        }
+        .login-container h2 {
+            color: rgb(255, 255, 255); /* Texto blanco para el título */
+            background-color: transparent; /* Asegura que el fondo del h2 sea transparente */
+            margin-bottom: 20px; /* Espacio debajo del título */
+        }
+        .input-group {
+            position: relative;
+            width: 100%;
+            margin: 10px 0;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%; /* Ocupa todo el ancho disponible del contenedor */
+            padding: 10px;
+            padding-right: 40px; /* Espacio extra para el icono de ojo */
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box; /* Incluye padding y borde en el ancho total */
+        }
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #555; /* Color del icono */
+            font-size: 1.2em; /* Tamaño del icono */
+        }
+        .toggle-password:hover {
+            color: #000;
+        }
+        button {
+            background-color: #b57700;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px; /* Un poco de espacio sobre el botón */
+        }
+        button:hover {
+            background-color: #016a53;
+        }
+        #error-message {
+            color: red;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Inicia de sesión</h2>
+        <form id="loginForm">
+            <div class="input-group">
+                <input type="text" id="username" placeholder="Usuario" required>
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Contraseña" required>
+                <span class="toggle-password" id="togglePassword">
+                    <i class="fas fa-eye"></i>
+                </span>
+            </div>
+            <button type="submit">Acceder</button>
+            <p id="error-message"></p>
+        </form>
+    </div>
+
+    <script>
+        // Asegúrate de que el DOM esté completamente cargado antes de ejecutar el script
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordInput = document.getElementById('password');
+            const togglePassword = document.getElementById('togglePassword');
+            const loginForm = document.getElementById('loginForm');
+            const errorMessage = document.getElementById('error-message');
+
+            // --- Funcionalidad de mostrar/ocultar contraseña ---
+            if (togglePassword && passwordInput) { // Verifica que los elementos existan
+                togglePassword.addEventListener('click', function() {
+                    // Cambia el tipo de input entre 'password' y 'text'
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+
+                    // Cambia el icono del ojo (cerrado/abierto)
+                    this.querySelector('i').classList.toggle('fa-eye');
+                    this.querySelector('i').classList.toggle('fa-eye-slash');
+                });
+            }
+
+            // --- Lógica de inicio de sesión ---
+            if (loginForm && errorMessage) { // Verifica que los elementos existan
+                loginForm.addEventListener('submit', function(event) {
+                    event.preventDefault(); // Evita el envío del formulario por defecto
+
+                    const username = document.getElementById('username').value;
+                    const password = document.getElementById('password').value;
+
+                    // Define un array de credenciales válidas
+                    // ¡ADVERTENCIA! ESTO NO ES SEGURO PARA PRODUCCIÓN.
+                    // Las credenciales son visibles en el código fuente del navegador.
+                    const validCredentials = [
+                        { username: 'administrador', password: 'procesos' },
+                        { username: 'jefe1', password: 'procesos2' }
+                        // Puedes añadir más pares de usuario/contraseña aquí
+                    ];
+
+                    let isAuthenticated = false;
+                    for (const cred of validCredentials) {
+                        if (username === cred.username && password === cred.password) {
+                            isAuthenticated = true;
+                            break; // Se encontró una coincidencia, no es necesario seguir buscando
+                        }
+                    }
+
+                    if (isAuthenticated) {
+                        errorMessage.textContent = ''; // Limpiar cualquier mensaje de error anterior
+                        // Redirige al sitio de Google Sites
+                        window.location.href = 'https://sites.google.com/view/procesosktw-com/inicio';
+                    } else {
+                        errorMessage.textContent = 'Error: Usuario o contraseña incorrectos.';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
